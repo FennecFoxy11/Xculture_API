@@ -78,8 +78,8 @@ class _ForumPageState extends State<ForumPage> {
                     itemCount: (snapshot.data!.length <= 6) ? snapshot.data?.length : 6,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
-                      DateTime dt = DateTime.parse(snapshot.data![index].updateDate).toLocal();   // Type snapshot.data![index].updateDateChange is Sting => String to DateTime
-                      String formattedDate = DateFormat('yyyy/MM/dd – HH:mm a').format(dt);       // Format Datetime
+                      var dt = DateTime.parse(snapshot.data![index].updateDate).toLocal();   // Type snapshot.data![index].updateDateChange is Sting => String to DateTime
+                      String formattedDate = DateFormat('dd/MM/yyyy – HH:mm a').format(dt);       // Format Datetime
                       return InkWell(
                         child: Container(
                           margin: const EdgeInsets.all(10),
