@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.xculturetestapi">
    <application
-        android:label="xculturetestapi"
+        android:label="xCulture"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
