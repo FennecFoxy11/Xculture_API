@@ -32,7 +32,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
             future: fullDetail,
             builder: (BuildContext context, AsyncSnapshot<Forum> snapshot) {
               if (snapshot.hasData) {
-                DateTime dt = DateTime.parse(snapshot.data!.updateDate).toLocal();   // Type snapshot.data![index].updateDateChange is Sting => String to DateTime
+                var dt = DateTime.parse(snapshot.data!.updateDate).toLocal();   // Type snapshot.data![index].updateDateChange is Sting => String to DateTime
                 String formattedDate = DateFormat('dd/MM/yyyy – HH:mm a').format(dt);
                 return Stack(
 
