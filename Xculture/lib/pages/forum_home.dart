@@ -14,6 +14,9 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPageState extends State<ForumPage> {
   Future<List<Forum>>? _futureForum;
+  String searchString = "";
+  TextEditingController searchController = TextEditingController();
+  
 
   @override
   void initState() {
@@ -68,6 +71,17 @@ class _ForumPageState extends State<ForumPage> {
               ],
             ),
           ),
+          TextField(
+              onChanged: (value) {
+                  setState((){
+                    searchString = value; 
+                  });
+              },
+              controller: searchController,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.search),
+            ),
+          ),
           Container(
             height: 250,
             width: double.maxFinite,
@@ -78,9 +92,7 @@ class _ForumPageState extends State<ForumPage> {
                     itemCount: (snapshot.data!.length <= 6) ? snapshot.data?.length : 6,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
-                      var dt = DateTime.parse(snapshot.data![index].updateDate).toLocal();   // Type snapshot.data![index].updateDateChange is Sting => String to DateTime
-                      String formattedDate = DateFormat('dd/MM/yyyy – HH:mm a').format(dt);       // Format Datetime
-                      return InkWell(
+                      return snapshot.data![index].title.toLowerCase().contains(searchString) ? InkWell(
                         child: Container(
                           margin: const EdgeInsets.all(10),
                           width: 300,
@@ -128,10 +140,6 @@ class _ForumPageState extends State<ForumPage> {
                                       snapshot.data![index].subtitle,
                                       style: const TextStyle(fontSize: 15), // Forum Subtitle
                                     ), 
-                                    Text( 
-                                      formattedDate,
-                                      style: const TextStyle(fontSize: 15), // Forum Date
-                                    )
                                   ],
                                 ),
                               )
@@ -141,7 +149,7 @@ class _ForumPageState extends State<ForumPage> {
                         onTap: () {
                           Navigator.pushNamed(context, 'forumDetailPage', arguments: snapshot.data![index]);
                         },
-                      );
+                      ) : Container();
                     }
                   );
                 }
