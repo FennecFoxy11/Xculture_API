@@ -19,6 +19,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   Widget build(BuildContext context) {
     final forumDetail = ModalRoute.of(context)!.settings.arguments as Forum;
     fullDetail = getFullDetail(forumDetail.id);
+
     setState(() {
       forumViewed(forumDetail.id);
     });
@@ -32,10 +33,10 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
             future: fullDetail,
             builder: (BuildContext context, AsyncSnapshot<Forum> snapshot) {
               if (snapshot.hasData) {
-                var dt = DateTime.parse(snapshot.data!.updateDate).toLocal();   // Type snapshot.data![index].updateDateChange is Sting => String to DateTime
-                String formattedDate = DateFormat('dd/MM/yyyy – HH:mm a').format(dt);
-                return Stack(
+                var dt = DateTime.parse(snapshot.data!.updateDate).toLocal();           // Type snapshot.data![index].updateDate is Sting => String to DateTime
+                String formattedDate = DateFormat('dd/MM/yyyy – HH:mm a').format(dt);   // Format Datetime
 
+                return Stack(
                   children: [
                     Positioned(
                       right: 0,
@@ -91,10 +92,10 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                               const Text("Tags Area"),
                               const SizedBox(height: 10),
                               Row(
-                                children: const [
-                                  Icon(Icons.account_circle),
-                                  SizedBox(width: 5),
-                                  Text("Alex Wongwathana")
+                                children: [
+                                  const Icon(Icons.account_circle),
+                                  const SizedBox(width: 5),
+                                  (snapshot.data!.incognito == false) ? Text(snapshot.data!.author) : const Text("Author")
                                 ],
                               ),
                               const SizedBox(height: 10),
@@ -139,7 +140,21 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                               const SizedBox(height: 20),
                               const Text("Comments",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold)),
+                                      fontWeight: FontWeight.bold)
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: snapshot.data!.comments.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      child: ListTile(
+                                        title: (snapshot.data!.comments[index].incognito == false) ? Text(snapshot.data!.comments[index].author) : const Text("Author"),
+                                        subtitle: Text(snapshot.data!.comments[index].content),
+                                      ),
+                                    );
+                                  }
+                                )
+                              )
                             ],
                           ),
                         ))
