@@ -92,7 +92,7 @@ class _ForumPageState extends State<ForumPage> {
                     itemCount: (snapshot.data!.length <= 6) ? snapshot.data?.length : 6,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
-                      return snapshot.data![index].title.toLowerCase().contains(searchString) ? InkWell(
+                      return snapshot.data![index].title.toLowerCase().contains(searchString) ? InkWell(    // search forum
                         child: Container(
                           margin: const EdgeInsets.all(10),
                           width: 300,
