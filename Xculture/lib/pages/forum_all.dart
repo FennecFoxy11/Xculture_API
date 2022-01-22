@@ -9,6 +9,10 @@ class ForumAllPage extends StatefulWidget {
 }
 
 class _ForumAllPageState extends State<ForumAllPage> {
+
+  String searchString = "";
+  TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final forumList =
@@ -43,20 +47,31 @@ class _ForumAllPageState extends State<ForumAllPage> {
           padding: const EdgeInsets.all(10.0),
           child: const Text("Forum", style: TextStyle(fontSize: 25),)
         ),
+        TextField(
+          onChanged: (value) {
+                setState((){
+                  searchString = value; 
+                });
+            },
+            controller: searchController,
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.search),
+          ),
+        ),
         Expanded(
           child: FutureBuilder<List<Forum>>(
             builder: (BuildContext context, AsyncSnapshot<List<Forum>> snapshot) {
               if (snapshot.hasData) {
-                return ListView.builder(
+                return searchString == "" ? Container() : ListView.builder(
                   itemCount: snapshot.data?.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
+                    return snapshot.data![index].title.toLowerCase().contains(searchString) ? ListTile(
                       title: Text(snapshot.data![index].title),
                       subtitle: Text(snapshot.data![index].subtitle),
                       onTap: () {
                         Navigator.pushNamed(context, "forumDetailPage", arguments: snapshot.data![index]);
                       },
-                    );
+                    ) : Container();
                   },
                 );
               }
