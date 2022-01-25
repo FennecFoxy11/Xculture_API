@@ -1,9 +1,10 @@
+import 'menu/menu_page.dart';
 import 'package:flutter/material.dart';
-import 'package:xculturetestapi/pages/forum_home.dart';
-import 'package:xculturetestapi/pages/commu_page.dart';
 import 'package:xculturetestapi/pages/search_page.dart';
-import 'package:xculturetestapi/pages/menu_page.dart';
-import 'package:xculturetestapi/pages/event_page.dart';
+import 'package:xculturetestapi/pages/event/event_page.dart';
+import 'package:xculturetestapi/pages/forum/forum_home.dart';
+import 'package:xculturetestapi/pages/community/commu_page.dart';
+
 
 class NavBar extends StatefulWidget{
   const NavBar({ Key? key }) : super(key: key);
@@ -14,6 +15,7 @@ class NavBar extends StatefulWidget{
 }
 
 class _NavBarState extends State<NavBar> {
+  
   List pages = [
     const EventPage(),
     const SearchPage(),
@@ -27,6 +29,7 @@ class _NavBarState extends State<NavBar> {
       currentIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
