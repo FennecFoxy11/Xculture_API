@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:xculturetestapi/pages/forum_new.dart';
-import 'package:xculturetestapi/pages/forum_detail.dart';
-import '../data.dart';
-import 'package:intl/intl.dart';
-import 'dart:convert';
 import 'dart:async';
+import '../data.dart';
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:xculturetestapi/pages/forum/forum_new.dart';
+import 'package:xculturetestapi/pages/forum/forum_detail.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -104,32 +104,6 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
               ),
-              // DropdownButtonHideUnderline(
-              //   child: Container(
-              //     height: 30,
-              //     padding: const EdgeInsets.symmetric(horizontal: 10),
-              //     decoration: BoxDecoration(
-              //       color: Colors.grey[300],
-              //       borderRadius: BorderRadius.circular(10),
-              //     ),
-              //     child: DropdownButton(
-              //       hint: const Text("Sort by..."),
-              //       icon: const Icon(Icons.arrow_drop_down),
-              //       items: sortList.map((value){
-              //         return DropdownMenuItem(
-              //           value: value,
-              //           child: Text(value),
-              //         );
-              //       }).toList(),
-              //       value: value,
-              //       onChanged: (value) {
-              //         setState(() {
-              //           this.value = value as String?;
-              //         });
-              //       }
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
