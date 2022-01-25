@@ -1,9 +1,12 @@
-import 'dart:convert';
 import 'dart:async';
-import 'package:http/http.dart' as http;
+import '../data.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'data.dart';
-import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:xculturetestapi/pages/forum_all.dart';
+import 'package:xculturetestapi/pages/forum_detail.dart';
+import 'package:xculturetestapi/pages/forum_new.dart';
+
 
 class ForumPage extends StatefulWidget {
   const ForumPage({ Key? key }) : super(key: key);
@@ -14,9 +17,6 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPageState extends State<ForumPage> {
   Future<List<Forum>>? _futureForum;
-  String searchString = "";
-  TextEditingController searchController = TextEditingController();
-  
 
   @override
   void initState() {
@@ -38,9 +38,14 @@ class _ForumPageState extends State<ForumPage> {
       body: showTopFiveForum(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, "newForumPage").then(refreshPage);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NewForumPage(),
+            )
+          ).then(refreshPage);
         },
-        child: const Icon(Icons.near_me),
+        child: const Icon(Icons.post_add)
       )
     );
   }
@@ -64,22 +69,21 @@ class _ForumPageState extends State<ForumPage> {
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: 22),
                 ),
                 const Spacer(),
-                TextButton(onPressed: () {
-                  Navigator.pushNamed(context, 'forumAllPage', arguments: _futureForum).then(refreshPage);
+                TextButton(
+                  onPressed: () {
+                  // Navigator.pushNamed(context, 'forumAllPage', arguments: _futureForum).then(refreshPage);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ForumAllPage(),
+                      settings: RouteSettings(
+                        arguments: _futureForum,
+                      ),
+                    )
+                  ).then(refreshPage);
                 }, 
                 child: const Text("see all")),
               ],
-            ),
-          ),
-          TextField(
-              onChanged: (value) {
-                  setState((){
-                    searchString = value; 
-                  });
-              },
-              controller: searchController,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
             ),
           ),
           Container(
@@ -89,10 +93,10 @@ class _ForumPageState extends State<ForumPage> {
               builder: (BuildContext context, AsyncSnapshot<List<Forum>> snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
-                    itemCount: (snapshot.data!.length <= 6) ? snapshot.data?.length : 6,
+                    itemCount: (snapshot.data!.length <= 5) ? snapshot.data!.length : 5,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
-                      return snapshot.data![index].title.toLowerCase().contains(searchString) ? InkWell(    // search forum
+                      return InkWell(
                         child: Container(
                           margin: const EdgeInsets.all(10),
                           width: 300,
@@ -139,7 +143,7 @@ class _ForumPageState extends State<ForumPage> {
                                     Text(
                                       snapshot.data![index].subtitle,
                                       style: const TextStyle(fontSize: 15), // Forum Subtitle
-                                    ), 
+                                    ),
                                   ],
                                 ),
                               )
@@ -147,9 +151,17 @@ class _ForumPageState extends State<ForumPage> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.pushNamed(context, 'forumDetailPage', arguments: snapshot.data![index]);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ForumDetailPage(),
+                              settings: RouteSettings(
+                                arguments: snapshot.data![index],
+                              ),
+                            )
+                          );
                         },
-                      ) : Container();
+                      );
                     }
                   );
                 }
@@ -178,7 +190,6 @@ class _ForumPageState extends State<ForumPage> {
       throw Exception('Failed to get forums.');
     }
 
-  }
-
+  } 
 
 }
