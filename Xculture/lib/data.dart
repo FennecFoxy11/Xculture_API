@@ -11,6 +11,7 @@ class Forum {
   final String date;
   final String updateDate;
   final List<Comment> comments; 
+  final List<Tag> tags;
 
   Forum({
     required this.id, 
@@ -25,6 +26,7 @@ class Forum {
     required this.date,
     required this.updateDate,
     required this.comments,
+    required this.tags,
   });
 
   factory Forum.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class Forum {
       date: json['date'],
       updateDate: json['update_date'],
       comments: getCommentsFromJson(json['comments']),
+      tags: getTagsFromJson(json['tags']),
     );
   }
 
@@ -48,6 +51,16 @@ class Forum {
     List<Comment> list = [];
     if(comments != null) {
       comments.forEach( (obj) => list.add(Comment.fromJson(obj)));
+      list.sort((a, b) => a.id.compareTo(b.id));
+    }
+    return list;
+  }
+
+  static List<Tag> getTagsFromJson(tags) {
+    List<Tag> list = [];
+    if(tags != null) {
+      tags.forEach( (obj) => list.add(Tag.fromForumJson(obj)));
+      list.sort((a, b) => a.id.compareTo(b.id));
     }
     return list;
   }
@@ -131,4 +144,41 @@ class Reply {
       updateDate: json["update_date"],
     );
   }
+}
+
+class Tag {
+  final int id;
+  final String name;
+  final int usage;
+
+  Tag({
+    required this.id,
+    required this.name,
+    required this.usage,
+  });
+
+  factory Tag.fromForumJson(Map<String, dynamic> json) {
+    return Tag(
+      id: json["tag"]["id"],
+      name: json["tag"]["name"],
+      usage: json["tag"]["usage_amount"],
+    );
+  }
+
+  factory Tag.fromJson(Map<String, dynamic> json) {
+    return Tag(
+      id: json["id"],
+      name: json["name"],
+      usage: json["usage_amount"],
+    );
+  }
+
+  @override
+  String toString() => name;
+
+  @override
+  operator ==(other) => other is Tag && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode^name.hashCode;
 }
