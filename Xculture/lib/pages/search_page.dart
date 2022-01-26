@@ -39,15 +39,11 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Forum",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Search",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: showAllForum(),
       floatingActionButton: FloatingActionButton(
@@ -157,7 +153,6 @@ class _SearchPageState extends State<SearchPage> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(snapshot.data![index].title,
-                                              maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
@@ -165,7 +160,6 @@ class _SearchPageState extends State<SearchPage> {
                                             ),
                                             const Padding(padding: EdgeInsets.only(bottom: 2.0)),
                                             Text(snapshot.data![index].subtitle,
-                                              maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                 fontSize: 12.0,

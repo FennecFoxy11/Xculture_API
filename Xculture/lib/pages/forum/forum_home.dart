@@ -30,12 +30,11 @@ class _ForumPageState extends State<ForumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Forum",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Forum",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: showTopFiveForum(),
       floatingActionButton: FloatingActionButton(
@@ -116,40 +115,42 @@ class _ForumPageState extends State<ForumPage> {
                           ),
                           child: Stack(
                             children: [
-                              Positioned(
-                                top: 0,
-                                child: Container(
-                                  height: 120,
-                                  width: 300,
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                    image: DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: NetworkImage(snapshot.data![index].thumbnail) // Forum Image
-                                    ),
+                              Container(
+                                height: 120,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
                                   ),
-                                )
+                                  image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(snapshot.data![index].thumbnail) // Forum Image
+                                  ),
+                                ),
                               ),
-                              Positioned(
-                                top: 140,
-                                left: 20,
+                              Container(
+                                margin: const EdgeInsets.only(top: 140, left: 20, right: 0, bottom: 0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      snapshot.data![index].title,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20), // Forum Title
+                                    Text(snapshot.data![index].title,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                    Text(
-                                      snapshot.data![index].subtitle,
-                                      style: const TextStyle(fontSize: 15), // Forum Subtitle
+                                    Text(snapshot.data![index].subtitle,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 15.0,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: snapshot.data![index].tags.map((tag) => Padding(
+                                      children: snapshot.data![index].tags.take(2).map((tag) => Padding(
                                         padding: const EdgeInsets.only(right: 10),
                                         child: Chip(
                                           label: Text(tag.name),
@@ -171,7 +172,7 @@ class _ForumPageState extends State<ForumPage> {
                                 arguments: snapshot.data![index],
                               ),
                             )
-                          );
+                          ).then(refreshPage);
                         },
                       );
                     }

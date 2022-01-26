@@ -13,12 +13,11 @@ class _CommuPageState extends State<CommuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Community",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Community",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: Container(
         child: const Center(

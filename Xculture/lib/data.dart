@@ -58,7 +58,7 @@ class Forum {
 
   static List<Tag> getTagsFromJson(tags) {
     List<Tag> list = [];
-    if(tags != null) {
+    if(tags != []) {
       tags.forEach( (obj) => list.add(Tag.fromForumJson(obj)));
       list.sort((a, b) => a.id.compareTo(b.id));
     }

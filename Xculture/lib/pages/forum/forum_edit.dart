@@ -46,11 +46,10 @@ class _EditForumPageState extends State<EditForumPage>{
 
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Edit Forum",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
-          ),
+        centerTitle: true,
+        title: const Text(
+          "Edit Forum",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
         ),
       ),
       body: WillPopScope(
@@ -158,8 +157,9 @@ class _EditForumPageState extends State<EditForumPage>{
                     }
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Align(
+                  alignment: Alignment.centerLeft,
+                  child: Wrap(
                     children: arr.map((e) => Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: Chip(
@@ -173,6 +173,7 @@ class _EditForumPageState extends State<EditForumPage>{
                       ),
                     )).toList(),
                   ),
+                ),
                   const SizedBox(height: 20),
                   TextFormField(
                     maxLines: 10,

@@ -34,15 +34,11 @@ class _ForumAllPageState extends State<ForumAllPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Forum",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Forum",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: showAllForum(forumList),
       // bottomNavigationBar: BottomNavigationBar(const NavBar()),
@@ -177,7 +173,6 @@ class _ForumAllPageState extends State<ForumAllPage> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(snapshot.data![index].title,
-                                              maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
@@ -185,7 +180,6 @@ class _ForumAllPageState extends State<ForumAllPage> {
                                             ),
                                             const Padding(padding: EdgeInsets.only(bottom: 2.0)),
                                             Text(snapshot.data![index].subtitle,
-                                              maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                 fontSize: 12.0,
