@@ -186,42 +186,38 @@ class _ForumAllPageState extends State<ForumAllPage> {
                                                 color: Colors.black,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Text(snapshot.data![index].author,
-                                              style: const TextStyle(
-                                                fontSize: 12.0,
-                                                //color: Colors.black,
-                                              ),
-                                            ),
-                                            Text(formattedDate,
-                                              style: const TextStyle(
-                                                fontSize: 12.0,
-                                                //color: Colors.grey,
-                                              ),
+                                            Wrap(
+                                              crossAxisAlignment: WrapCrossAlignment.start,
+                                              children: snapshot.data![index].tags.map((tag) => Padding(
+                                                padding: const EdgeInsets.only(right: 10),
+                                                child: Chip(
+                                                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4), // Chip size -4 -> 4
+                                                  label: Text(tag.name),
+                                                ),
+                                              )).toList(),
                                             ),
                                           ],
                                         ),
                                       ),
-                                      // Tags
-                                      // Padding(
-                                      //   padding: const EdgeInsets.symmetric(vertical: 5.0),
-                                      //   child: Wrap(
-                                      //     crossAxisAlignment: WrapCrossAlignment.start,
-                                      //     children: snapshot.data![index].tags.map((tag) => Padding(
-                                      //       padding: const EdgeInsets.only(right: 10),
-                                      //       child: Chip(
-                                      //         label: Text(tag.name),
-                                      //       ),
-                                      //     )).toList(),
-                                      //   ),
-                                      // ),
+                                      const SizedBox(height: 5,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(snapshot.data![index].author,
+                                            style: const TextStyle(
+                                              fontSize: 12.0,
+                                              //color: Colors.black,
+                                            ),
+                                          ),
+                                          Text(formattedDate,
+                                            style: const TextStyle(
+                                              fontSize: 12.0,
+                                              //color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),

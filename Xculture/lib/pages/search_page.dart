@@ -166,28 +166,37 @@ class _SearchPageState extends State<SearchPage> {
                                                 color: Colors.black,
                                               ),
                                             ),
+                                            Wrap(
+                                              crossAxisAlignment: WrapCrossAlignment.start,
+                                              children: snapshot.data![index].tags.map((tag) => Padding(
+                                                padding: const EdgeInsets.only(right: 10),
+                                                child: Chip(
+                                                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4), // Chip size -4 -> 4
+                                                  label: Text(tag.name),
+                                                ),
+                                              )).toList(),
+                                            ),
                                           ],
                                         ),
                                       ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Text(snapshot.data![index].author,
-                                              style: const TextStyle(
-                                                fontSize: 12.0,
-                                                //color: Colors.black,
-                                              ),
+                                      const SizedBox(height: 5,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(snapshot.data![index].author,
+                                            style: const TextStyle(
+                                              fontSize: 12.0,
+                                              //color: Colors.black,
                                             ),
-                                            Text(formattedDate,
-                                              style: const TextStyle(
-                                                fontSize: 12.0,
-                                                //color: Colors.grey,
-                                              ),
+                                          ),
+                                          Text(formattedDate,
+                                            style: const TextStyle(
+                                              fontSize: 12.0,
+                                              //color: Colors.grey,
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
