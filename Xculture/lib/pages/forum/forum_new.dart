@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import '../../data.dart';
+import 'package:xculturetestapi/data.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:find_dropdown/find_dropdown.dart';
+import 'package:xculturetestapi/navbar.dart';
 
 
 class NewForumPage extends StatefulWidget {
@@ -214,6 +215,7 @@ class _NewForumPageState extends State<NewForumPage> {
           ),
         ),
       ),
+      bottomNavigationBar: Navbar.navbar(context, 2),
     );
   }
   sendForumDetail(String title, String subtitle, String thumbnailUrl, String content, bool isSwitched, List<Tag> tags) async {

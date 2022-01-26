@@ -1,7 +1,7 @@
 import 'dart:async';
-import '../../data.dart';
+import 'package:xculturetestapi/data.dart';
 import 'dart:convert';
-import '../../arguments.dart';
+import 'package:xculturetestapi/arguments.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xculturetestapi/pages/forum/forum_edit.dart';
 import 'package:xculturetestapi/pages/reply/reply_edit.dart';
 import 'package:xculturetestapi/pages/comments/comment_edit.dart';
+import 'package:xculturetestapi/navbar.dart';
 
 
 
@@ -20,23 +21,22 @@ class ForumDetailPage extends StatefulWidget {
 }
 
 class _ForumDetailPageState extends State<ForumDetailPage> {
-  bool incognito = false; 
-  bool favourite = false;
-  bool _favcomments = false;
-  bool _favreplies = false;
-  bool isReply = false;
-  bool isShowReply = false;
-
   Future<Forum>? fullDetail;
 
-  final TextEditingController _authorComment = TextEditingController();
   final TextEditingController _contentComment = TextEditingController();
-  final List<TextEditingController> _authorReplies = [];
   final List<TextEditingController> _contentReplies = [];
-  final List<bool> isSwitchedReplies = [];
-  bool isSwitchedComment = false;
-  bool isSwitchedReply = false;
-
+  final List<bool> incognitoReplies = [];
+  final List<bool> _favComments = [];
+  final List<bool> _isReply = [];
+  final List<bool> _isShowReply = [];
+  final List<List<bool>> _favRepliesTotal = [];
+  bool incognitoComment = false;
+  bool incognitoReply = false;
+  bool favourite = false;
+  bool _favComment = false;
+  bool _favReply = false;
+  bool isReply = false;
+  bool isShowReply = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +63,20 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 var dt = DateTime.parse(snapshot.data!.updateDate).toLocal();
                 String dateforum = DateFormat.yMMMMd('en_US').format(dt);
                 for (var comment in snapshot.data!.comments) {
-                  final TextEditingController _authorReply = TextEditingController();
                   final TextEditingController _contentReply = TextEditingController();
 
-                  _authorReplies.add(_authorReply);
                   _contentReplies.add(_contentReply);
-                  isSwitchedReplies.add(isSwitchedReply);
+                  incognitoReplies.add(incognitoReply);
+                  _favComments.add(_favComment);
+                  _isReply.add(isReply);
+                  _isShowReply.add(isShowReply);
+
+                  List<bool> _favRepliesPerComment = [];
+                  for(var reply in comment.replies) {
+                    _favRepliesPerComment.add(_favReply);
+                  }
+                  _favRepliesTotal.add(_favRepliesPerComment);
+                  
                 }
 
                 return Stack(
@@ -304,10 +312,10 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                       children: [
                                         const Text("Incognito : "),
                                         Switch(
-                                          value: isSwitchedComment, 
+                                          value: incognitoComment, 
                                           onChanged: (value) {
                                             setState(() {
-                                              isSwitchedComment = value;
+                                              incognitoComment = value;
                                             });
                                           }
                                         ),
@@ -315,7 +323,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                         ElevatedButton(
                                           onPressed: (){
                                             setState(() {
-                                              sendCommentDetail(snapshot.data!.id, _authorComment.text, _contentComment.text, isSwitchedComment);
+                                              sendCommentDetail(snapshot.data!.id, _contentComment.text, incognitoComment);
                                               refreshPage(snapshot.data!.id);
                                             });
                                           }, 
@@ -388,24 +396,24 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                                         ),
                                                         onPressed: () {
                                                           setState(() {
-                                                            isShowReply = !isShowReply;
+                                                            _isShowReply[index] = !_isShowReply[index];
                                                           });
                                                         },
                                                       ),
                                                     ),
                                                     IconButton(
                                                       visualDensity: VisualDensity.compact,
-                                                      icon: _favcomments == false ? const Icon(Icons.thumb_up_alt_outlined) : const Icon(Icons.thumb_up),
+                                                      icon: _favComments[index] == false ? const Icon(Icons.thumb_up_alt_outlined) : const Icon(Icons.thumb_up),
                                                       color: Colors.red,
                                                       iconSize: 20,
                                                       onPressed: () {
                                                         setState(() { 
-                                                          if (_favcomments == false ) {
-                                                            _favcomments = true;
+                                                          if (_favComments[index] == false ) {
+                                                            _favComments[index] = true;
                                                             commentFavorited(snapshot.data!.id, snapshot.data!.comments[index].id);
                                                             Fluttertoast.showToast(msg: "Favorite Comment.");
                                                           } else {
-                                                            _favcomments = false;
+                                                            _favComments[index] = false;
                                                             Fluttertoast.showToast(msg: "Unfavorite Comment.");
                                                             commentUnfavorited(snapshot.data!.id, snapshot.data!.comments[index].id);
                                                           }                            
@@ -424,7 +432,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                                       ),
                                                       onPressed: () {
                                                         setState(() {
-                                                          isReply = !isReply;
+                                                          _isReply[index] = !_isReply[index];
                                                         });
                                                       },
                                                     ),
@@ -460,7 +468,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                           ),
                                           // Reply TextField
                                           Visibility(
-                                            visible: isReply,
+                                            visible: _isReply[index],
                                             child: Column(
                                               // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                               children: [
@@ -478,7 +486,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                                         controller: _contentReplies[index],
                                                         keyboardType: TextInputType.multiline,
                                                         decoration: const InputDecoration(
-                                                          hintText: "Type your comment...",
+                                                          hintText: "Type your reply...",
                                                           border: InputBorder.none,
                                                           isDense: true, // important line
                                                           contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 15), // adjust form size
@@ -491,10 +499,10 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                                   children: [
                                                     const Text("Incognito : "),
                                                     Switch(
-                                                      value: isSwitchedReplies[index], 
+                                                      value: incognitoReplies[index], 
                                                       onChanged: (value) {
                                                         setState(() {
-                                                          isSwitchedReplies[index] = value;
+                                                          incognitoReplies[index] = value;
                                                         });
                                                       }
                                                     ),
@@ -502,7 +510,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                                     IconButton(
                                                       onPressed: () {
                                                         setState(() {
-                                                          sendReplyDetail(snapshot.data!.id, snapshot.data!.comments[index].id, _authorReplies[index].text, _contentReplies[index].text, isSwitchedReplies[index]);
+                                                          sendReplyDetail(snapshot.data!.id, snapshot.data!.comments[index].id, _contentReplies[index].text, incognitoReplies[index]);
                                                           refreshPage(snapshot.data!.id);
                                                         });
                                                       }, 
@@ -516,7 +524,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                           ),
                                           // Reply List
                                           Visibility(
-                                            visible: isShowReply,
+                                            visible: _isShowReply[index],
                                             child: ListView.builder(
                                               itemCount: snapshot.data!.comments[index].replies.length,
                                               shrinkWrap: true,
@@ -559,17 +567,17 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                                           children: [
                                                             IconButton(
                                                               visualDensity: VisualDensity.compact,
-                                                              icon: _favreplies == false ? const Icon(Icons.thumb_up_alt_outlined) : const Icon(Icons.thumb_up),
+                                                              icon: _favRepliesTotal[index][index2] == false ? const Icon(Icons.thumb_up_alt_outlined) : const Icon(Icons.thumb_up),
                                                               color: Colors.red,
                                                               iconSize: 20,
                                                               onPressed: () {
                                                                 setState(() { 
-                                                                  if (_favreplies == false ) {
-                                                                    _favreplies = true;
+                                                                  if (_favRepliesTotal[index][index2] == false ) {
+                                                                    _favRepliesTotal[index][index2] = true;
                                                                     replyFavorited(snapshot.data!.id, snapshot.data!.comments[index].id, snapshot.data!.comments[index].replies[index2].id);
                                                                     Fluttertoast.showToast(msg: "Favorite Reply.");
                                                                   } else {
-                                                                    _favreplies = false;
+                                                                    _favRepliesTotal[index][index2] = false;
                                                                     Fluttertoast.showToast(msg: "Unfavorite Reply.");
                                                                     replyUnfavorited(snapshot.data!.id, snapshot.data!.comments[index].id, snapshot.data!.comments[index].replies[index2].id);
                                                                   }                            
@@ -618,6 +626,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                   }
                                 ),
                               ),
+                              /*
                               // You may also like header
                               const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 5.0),
@@ -691,6 +700,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                   ),
                                 ),
                               ),
+                              */
                             ],
                           ),
                         ),
@@ -704,6 +714,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
           ),
         ),
       ),
+      bottomNavigationBar: Navbar.navbar(context, 2),
     );
   }
 
@@ -761,14 +772,13 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     }
   }
 
-  sendCommentDetail(forumID, author, content, incognito) async {
+  sendCommentDetail(forumID, content, incognito) async {
     final response = await http.post(
       Uri.parse('http://10.0.2.2:3000/forums/$forumID/comments'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'author': author,
         'content': content,
         'incognito': incognito,
       }),
@@ -808,14 +818,13 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     }
   }
 
-  sendReplyDetail(forumID, commentID, author, content, incognito) async {
+  sendReplyDetail(forumID, commentID, content, incognito) async {
     final response = await http.post(
       Uri.parse('http://10.0.2.2:3000/forums/$forumID/comments/$commentID/replies'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'author': author,
         'content': content,
         'incognito': incognito,
       }),

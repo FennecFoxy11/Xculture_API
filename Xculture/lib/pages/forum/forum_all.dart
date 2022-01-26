@@ -1,9 +1,9 @@
-import '../../data.dart';
+import 'package:xculturetestapi/data.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:xculturetestapi/pages/NavBar.dart';
 import 'package:xculturetestapi/pages/forum/forum_new.dart';
 import 'package:xculturetestapi/pages/forum/forum_detail.dart';
+import 'package:xculturetestapi/navbar.dart';
 
 
 
@@ -33,30 +33,31 @@ class _ForumAllPageState extends State<ForumAllPage> {
         ModalRoute.of(context)!.settings.arguments as Future<List<Forum>>;
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Center(
-            child: Text(
-              "Forum",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 25),
-            ),
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            "Forum",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 25),
           ),
         ),
-        body: showAllForum(forumList),
-        // bottomNavigationBar: BottomNavigationBar(const NavBar()),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const NewForumPage(),
-              )
-            );
-          },
-          child: const Icon(Icons.post_add)
-        ),
+      ),
+      body: showAllForum(forumList),
+      // bottomNavigationBar: BottomNavigationBar(const NavBar()),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NewForumPage(),
+            )
+          );
+        },
+        child: const Icon(Icons.post_add)
+      ),
+      bottomNavigationBar: Navbar.navbar(context, 2),
     );
   }
 
