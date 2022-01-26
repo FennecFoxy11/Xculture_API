@@ -27,12 +27,11 @@ class _EditReplyPageState extends State<EditReplyPage> {
 
    return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Edit Reply",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Edit Reply",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: WillPopScope(
         onWillPop: () async {
@@ -44,20 +43,7 @@ class _EditReplyPageState extends State<EditReplyPage> {
           child: Column(
             children: [
               TextField(
-                controller: _author,
-                decoration: const InputDecoration(
-                  labelText: "Author",
-                  labelStyle: TextStyle(color: Colors.grey),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                maxLines: 10,
+                maxLines: 2,
                 controller: _content,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
@@ -86,7 +72,7 @@ class _EditReplyPageState extends State<EditReplyPage> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    updateReplyDetail(args.forumID, args.commentID, args.reply.id, _author.text, _content.text, _incognito);
+                    updateReplyDetail(args.forumID, args.commentID, args.reply.id, _content.text, _incognito);
                   });
                   Navigator.pop(context, args.forumID);
                 }, 
@@ -100,7 +86,7 @@ class _EditReplyPageState extends State<EditReplyPage> {
     );
   }
 
-  updateReplyDetail(forumID, commentID, replyID, author, content, incognito) async {
+  updateReplyDetail(forumID, commentID, replyID, content, incognito) async {
     final response = await http.put(
       Uri.parse('http://10.0.2.2:3000/forums/$forumID/comments/$commentID/replies/$replyID'),
       headers: <String, String>{
@@ -108,7 +94,6 @@ class _EditReplyPageState extends State<EditReplyPage> {
       },
       body: jsonEncode(<String, dynamic>{
         'content': content,
-        'author': author,
         'incognito': incognito,
       }),
     );

@@ -34,15 +34,11 @@ class _ForumAllPageState extends State<ForumAllPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Forum",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Forum",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: showAllForum(forumList),
       // bottomNavigationBar: BottomNavigationBar(const NavBar()),

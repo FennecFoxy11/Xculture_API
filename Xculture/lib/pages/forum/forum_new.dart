@@ -35,12 +35,11 @@ class _NewForumPageState extends State<NewForumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Post Forum",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Post Forum",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -143,20 +142,22 @@ class _NewForumPageState extends State<NewForumPage> {
                 ),
                 
                 const SizedBox(height: 20),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: arr.map((e) => Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Chip(
-                      label: Text(e.name),
-                      deleteIcon: const Icon(Icons.clear),
-                      onDeleted: () {
-                        setState(() {
-                          arr.remove(e);
-                        });
-                      },
-                    ),
-                  )).toList(),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Wrap(
+                    children: arr.map((e) => Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Chip(
+                        label: Text(e.name),
+                        deleteIcon: const Icon(Icons.clear),
+                        onDeleted: () {
+                          setState(() {
+                            arr.remove(e);
+                          });
+                        },
+                      ),
+                    )).toList(),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(

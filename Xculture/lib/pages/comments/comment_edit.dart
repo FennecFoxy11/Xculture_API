@@ -27,12 +27,11 @@ class _EditCommentPageState extends State<EditCommentPage> {
 
    return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Edit Comment",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Edit Comment",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: WillPopScope(
         onWillPop: () async {
@@ -43,22 +42,9 @@ class _EditCommentPageState extends State<EditCommentPage> {
         child: Container(
           padding: const EdgeInsets.all(20),
           child: Column(
-            children: [ 
+            children: [
               TextFormField(
-                controller: _author,
-                decoration: const InputDecoration(
-                  labelText: "Author",
-                  labelStyle: TextStyle(color: Colors.grey),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                maxLines: 10,
+                maxLines: 3,
                 controller: _content,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
@@ -90,7 +76,7 @@ class _EditCommentPageState extends State<EditCommentPage> {
                 ),
                 onPressed: () {
                   setState(() {
-                    updateCommentDetail(args.forumID, args.comment.id, _author.text, _content.text, _incognito);
+                    updateCommentDetail(args.forumID, args.comment.id, _content.text, _incognito);
                   });
                   Navigator.pop(context, args.forumID);
                 }, 
@@ -104,7 +90,7 @@ class _EditCommentPageState extends State<EditCommentPage> {
     );
   }
 
-  updateCommentDetail(forumID, commentID, author, content, incognito) async {
+  updateCommentDetail(forumID, commentID, content, incognito) async {
     final response = await http.put(
       Uri.parse('http://10.0.2.2:3000/forums/$forumID/comments/$commentID'),
       headers: <String, String>{
@@ -112,7 +98,6 @@ class _EditCommentPageState extends State<EditCommentPage> {
       },
       body: jsonEncode(<String, dynamic>{
         'content': content,
-        'author': author,
         'incognito': incognito,
       }),
     );

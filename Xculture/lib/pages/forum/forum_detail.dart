@@ -37,17 +37,19 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   bool _favReply = false;
   bool isReply = false;
   bool isShowReply = false;
+  bool isFirstVisited = true;
 
   @override
   Widget build(BuildContext context) {
-
     final forumDetail = ModalRoute.of(context)!.settings.arguments as Forum;
     fullDetail = getFullDetail(forumDetail.id);
 
-    setState(() {
-      forumViewed(forumDetail.id);
-    });
-
+    if(isFirstVisited) {
+      setState(() {
+        forumViewed(forumDetail.id);
+        isFirstVisited = !isFirstVisited;
+      });
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -64,19 +66,24 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 String dateforum = DateFormat('MMMM dd, yyyy – HH:mm a').format(dt);
                 for (var comment in snapshot.data!.comments) {
                   final TextEditingController _contentReply = TextEditingController();
+                  List<bool> _favRepliesPerComment = [];
+                  var index = snapshot.data!.comments.indexOf(comment);
 
                   _contentReplies.add(_contentReply);
                   incognitoReplies.add(incognitoReply);
                   _favComments.add(_favComment);
                   _isReply.add(isReply);
                   _isShowReply.add(isShowReply);
-
-                  List<bool> _favRepliesPerComment = [];
-                  for(var reply in comment.replies) {
-                    _favRepliesPerComment.add(_favReply);
-                  }
-                  _favRepliesTotal.add(_favRepliesPerComment);
+                  if(_favRepliesTotal.length < snapshot.data!.comments.length){
+                      _favRepliesTotal.add(_favRepliesPerComment);
+                    }
                   
+
+                  for(var reply in comment.replies) {
+                    if(_favRepliesTotal[index].length < comment.replies.length){
+                      _favRepliesTotal[index].add(_favReply);
+                    }
+                  }
                 }
 
                 return Stack(
