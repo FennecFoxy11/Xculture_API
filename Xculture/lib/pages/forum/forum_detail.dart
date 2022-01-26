@@ -61,7 +61,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 var viewed = snapshot.data!.viewed.toString();
                 var favorited = snapshot.data!.favorited.toString();
                 var dt = DateTime.parse(snapshot.data!.updateDate).toLocal();
-                String dateforum = DateFormat.yMMMMd('en_US').format(dt);
+                String dateforum = DateFormat('MMMM dd, yyyy – HH:mm a').format(dt);
                 for (var comment in snapshot.data!.comments) {
                   final TextEditingController _contentReply = TextEditingController();
 
