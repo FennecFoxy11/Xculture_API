@@ -2,6 +2,7 @@ import 'dart:convert';
 import '../../arguments.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:xculturetestapi/navbar.dart';
 
 
 class EditReplyPage extends StatefulWidget {
@@ -94,7 +95,8 @@ class _EditReplyPageState extends State<EditReplyPage> {
             ],
           ), 
         ),
-      )
+      ),
+      bottomNavigationBar: Navbar.navbar(context, 2),
     );
   }
 

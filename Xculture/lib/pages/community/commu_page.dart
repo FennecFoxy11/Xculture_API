@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xculturetestapi/navbar.dart';
 
 class CommuPage extends StatefulWidget {
   const CommuPage({ Key? key }) : super(key: key);
@@ -10,10 +11,21 @@ class CommuPage extends StatefulWidget {
 class _CommuPageState extends State<CommuPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Center(
-        child: Text("Community Page"),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            "Community",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+          ),
+        ),
       ),
+      body: Container(
+        child: const Center(
+          child: Text("Community Page"),
+        ),
+      ),
+      bottomNavigationBar: Navbar.navbar(context, 3),
     );
   }
 }

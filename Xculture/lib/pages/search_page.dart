@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:xculturetestapi/pages/forum/forum_new.dart';
 import 'package:xculturetestapi/pages/forum/forum_detail.dart';
+import 'package:xculturetestapi/navbar.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -37,29 +38,31 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Center(
-            child: Text(
-              "Forum",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 25),
-            ),
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            "Forum",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 25),
           ),
         ),
-        body: showAllForum(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const NewForumPage(),
-              )
-            );
-          },
-          child: const Icon(Icons.post_add)
-        ));
+      ),
+      body: showAllForum(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NewForumPage(),
+            )
+          );
+        },
+        child: const Icon(Icons.post_add)
+      ),
+      bottomNavigationBar: Navbar.navbar(context, 1),
+    );
   }
 
   FutureOr refreshPage(dynamic value) {
@@ -117,7 +120,8 @@ class _SearchPageState extends State<SearchPage> {
                   itemBuilder: (context, index) {
                     var dt = DateTime.parse(snapshot.data![index].updateDate).toLocal();
                     String formattedDate = DateFormat('dd/MM/yyyy – HH:mm a').format(dt);
-                    return snapshot.data![index].title.toLowerCase().contains(searchString) ? InkWell(
+                    var contained = isContain(snapshot.data![index], searchString);
+                    return contained ? InkWell(
                       child: 
                         Container(
                           margin: const EdgeInsets.all(10),
@@ -238,5 +242,20 @@ class _SearchPageState extends State<SearchPage> {
 
   } 
 
+  bool isContain(Forum data, String search) {
+    var isContain = false;
 
+    if (data.title.toLowerCase().contains(search)) {
+      isContain = true;
+    }
+    else if (data.tags.isNotEmpty) {
+      for (var tag in data.tags) {
+        if(tag.name.toLowerCase().contains(search)) {
+          isContain = true;
+        }
+      }
+    }
+
+    return isContain;
+  }
 }

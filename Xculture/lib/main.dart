@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xculturetestapi/pages/Navbar.dart';
+//import 'package:xculturetestapi/pages/Navbar.dart';
 import 'package:xculturetestapi/pages/forum/forum_home.dart';
 // import 'package:xculturetestapi/pages/comment_edit.dart';
 // import 'package:xculturetestapi/pages/forum_all.dart';
@@ -23,10 +23,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         fontFamily: "Poppins",
       ),
-      
+      home: const ForumPage(),
+      /*
       initialRoute: 'navbar', // Set first page
       routes: {
-        'navbar': (context) => const NavBar(),
+        //'navbar': (context) => const NavBar(),
         'homePage': (context) => const ForumPage(),
         // 'forumAllPage': (context) => const ForumAllPage(),
         // 'forumDetailPage': (context) => const ForumDetailPage(),
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         // 'editCommentPage': (context) => const EditCommentPage(),
         // 'editReplyPage': (context) => const EditReplyPage(), // Change page by using only page's name
       },
+      */
     );
   }
 }

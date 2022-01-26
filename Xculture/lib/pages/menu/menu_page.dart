@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xculturetestapi/navbar.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -10,10 +11,21 @@ class MenuPage extends StatefulWidget {
 class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text("Menu Page"),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            "Menu",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+          ),
+        ),
       ),
+      body: Container(
+        child: const Center(
+          child: Text("Menu Page"),
+        ),
+      ),
+      bottomNavigationBar: Navbar.navbar(context, 4),
     );
   }
 }
