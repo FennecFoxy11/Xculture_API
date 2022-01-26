@@ -177,7 +177,7 @@ class _ForumAllPageState extends State<ForumAllPage> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          const Padding(padding: EdgeInsets.only(bottom: 2.0)),
+                                          //const Padding(padding: EdgeInsets.only(bottom: 2.0)),
                                           Text(snapshot.data![index].subtitle,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
