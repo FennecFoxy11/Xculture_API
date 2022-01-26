@@ -1,7 +1,8 @@
 import 'dart:convert';
-import '../../arguments.dart';
+import 'package:xculturetestapi/arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:xculturetestapi/navbar.dart';
 
 
 class EditCommentPage extends StatefulWidget {
@@ -98,7 +99,8 @@ class _EditCommentPageState extends State<EditCommentPage> {
             ],
           )
         ),
-      )
+      ),
+      bottomNavigationBar: Navbar.navbar(context, 2),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import '../../data.dart';
+import 'package:xculturetestapi/navbar.dart';
+import 'package:xculturetestapi/data.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:xculturetestapi/pages/forum/forum_new.dart';
@@ -47,7 +48,8 @@ class _ForumPageState extends State<ForumPage> {
           ).then(refreshPage);
         },
         child: const Icon(Icons.post_add)
-      )
+      ),
+      bottomNavigationBar: Navbar.navbar(context, 2),
     );
   }
 

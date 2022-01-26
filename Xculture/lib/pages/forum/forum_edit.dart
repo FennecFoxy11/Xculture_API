@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:xculturetestapi/data.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:find_dropdown/find_dropdown.dart';
+import 'package:xculturetestapi/navbar.dart';
 
 class EditForumPage extends StatefulWidget {
   const EditForumPage({ Key? key }) : super(key: key);
@@ -227,7 +228,8 @@ class _EditForumPageState extends State<EditForumPage>{
             )
           )
         )
-      )
+      ),
+      bottomNavigationBar: Navbar.navbar(context, 2),
     );
   }
 
