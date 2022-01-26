@@ -152,36 +152,36 @@ class _SearchPageState extends State<SearchPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(snapshot.data![index].title,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const Padding(padding: EdgeInsets.only(bottom: 2.0)),
-                                          Text(snapshot.data![index].subtitle,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          Wrap(
-                                            crossAxisAlignment: WrapCrossAlignment.start,
-                                            children: snapshot.data![index].tags.map((tag) => Padding(
-                                              padding: const EdgeInsets.only(right: 10),
-                                              child: Chip(
-                                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4), // Chip size -4 -> 4
-                                                label: Text(tag.name),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(snapshot.data![index].title,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            )).toList(),
-                                          ),
-                                        ],
+                                            ),
+                                            const Padding(padding: EdgeInsets.only(bottom: 2.0)),
+                                            Text(snapshot.data![index].subtitle,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Wrap(
+                                              crossAxisAlignment: WrapCrossAlignment.start,
+                                              children: snapshot.data![index].tags.map((tag) => Padding(
+                                                padding: const EdgeInsets.only(right: 10),
+                                                child: Chip(
+                                                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4), // Chip size -4 -> 4
+                                                  label: Text(tag.name),
+                                                ),
+                                              )).toList(),
+                                            ),
+                                          ],
+                                        )
                                       ),
                                       const SizedBox(height: 5),
                                       Column(
