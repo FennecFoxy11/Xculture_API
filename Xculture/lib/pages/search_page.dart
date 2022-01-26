@@ -179,7 +179,7 @@ class _SearchPageState extends State<SearchPage> {
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(height: 5,),
+                                      const SizedBox(height: 5),
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisAlignment: MainAxisAlignment.end,

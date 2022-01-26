@@ -199,7 +199,7 @@ class _ForumAllPageState extends State<ForumAllPage> {
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(height: 5,),
+                                      const SizedBox(height: 5),
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisAlignment: MainAxisAlignment.end,
