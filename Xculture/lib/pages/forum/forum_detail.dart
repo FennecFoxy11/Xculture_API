@@ -24,12 +24,14 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   Future<Forum>? fullDetail;
 
   final TextEditingController _contentComment = TextEditingController();
+  final GlobalKey<FormState> _formKeyComment = GlobalKey<FormState>();
   final List<TextEditingController> _contentReplies = [];
   final List<bool> incognitoReplies = [];
   final List<bool> _favComments = [];
   final List<bool> _isReply = [];
   final List<bool> _isShowReply = [];
   final List<List<bool>> _favRepliesTotal = [];
+  final List<GlobalKey<FormState>> _formKeyReplies = [];
   bool incognitoComment = false;
   bool incognitoReply = false;
   bool favourite = false;
@@ -37,17 +39,20 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   bool _favReply = false;
   bool isReply = false;
   bool isShowReply = false;
+  bool isFirstVisited = true;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-
     final forumDetail = ModalRoute.of(context)!.settings.arguments as Forum;
     fullDetail = getFullDetail(forumDetail.id);
 
-    setState(() {
-      forumViewed(forumDetail.id);
-    });
-
+    if(isFirstVisited) {
+      setState(() {
+        forumViewed(forumDetail.id);
+        isFirstVisited = !isFirstVisited;
+      });
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -64,19 +69,24 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 String dateforum = DateFormat('MMMM dd, yyyy – HH:mm a').format(dt);
                 for (var comment in snapshot.data!.comments) {
                   final TextEditingController _contentReply = TextEditingController();
-
-                  _contentReplies.add(_contentReply);
-                  incognitoReplies.add(incognitoReply);
-                  _favComments.add(_favComment);
-                  _isReply.add(isReply);
-                  _isShowReply.add(isShowReply);
-
                   List<bool> _favRepliesPerComment = [];
-                  for(var reply in comment.replies) {
-                    _favRepliesPerComment.add(_favReply);
+                  var index = snapshot.data!.comments.indexOf(comment);
+
+                  if(_contentReplies.length < snapshot.data!.comments.length) { // Depend on the amount of comments
+                    _favComments.add(_favComment);
+                    _isReply.add(isReply);
+                    _isShowReply.add(isShowReply);
+                    _contentReplies.add(_contentReply);
+                    incognitoReplies.add(incognitoReply);
+                    _formKeyReplies.add(_formKey);
+                    _favRepliesTotal.add(_favRepliesPerComment);
                   }
-                  _favRepliesTotal.add(_favRepliesPerComment);
                   
+                  for(var reply in comment.replies) {
+                    if(_favRepliesTotal[index].length < comment.replies.length) { // Depend on the amount of replies
+                      _favRepliesTotal[index].add(_favReply);
+                    }
+                  }
                 }
 
                 return Stack(
@@ -279,65 +289,79 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                 ),
                               ),
                               // Comment Box
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: AssetImage("assets/images/yukinon.jpeg"),
-                                        ),
-                                        const SizedBox(width: 20),
-                                        Expanded(
-                                          child: TextFormField(
-                                            minLines: 1,
-                                            maxLines: 3,
-                                            controller: _contentComment,
-                                            keyboardType: TextInputType.multiline,
-                                            decoration: const InputDecoration(
-                                              hintText: "Type your comment...",
-                                              border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                              Form(
+                                key: _formKeyComment,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage: AssetImage("assets/images/User_icon.jpg"),
+                                          ),
+                                          const SizedBox(width: 20),
+                                          Expanded(
+                                            child: TextFormField(
+                                              minLines: 1,
+                                              maxLines: 3,
+                                              controller: _contentComment,
+                                              keyboardType: TextInputType.multiline,
+                                              decoration: const InputDecoration(
+                                                hintText: "Type your comment...",
+                                                border: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                ),
+                                                isDense: true, // important line
+                                                contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 15), // adjust form size
                                               ),
-                                              isDense: true, // important line
-                                              contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 15), // adjust form size
+                                              validator: (value) {
+                                                if (value == null || value.isEmpty) {
+                                                  return "Please enter comment";
+                                                }
+                                                else {
+                                                  return null;
+                                                }
+                                              },
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("Incognito : "),
-                                        Switch(
-                                          value: incognitoComment, 
-                                          onChanged: (value) {
-                                            setState(() {
-                                              incognitoComment = value;
-                                            });
-                                          }
-                                        ),
-                                        const Spacer(),
-                                        ElevatedButton(
-                                          onPressed: (){
-                                            setState(() {
-                                              sendCommentDetail(snapshot.data!.id, _contentComment.text, incognitoComment);
-                                              refreshPage(snapshot.data!.id);
-                                            });
-                                          }, 
-                                          child: const SizedBox(
-                                            width: 100,
-                                            height: 30,
-                                            child: Center(
-                                              child: Text("Comment"),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text("Incognito : "),
+                                          Switch(
+                                            value: incognitoComment, 
+                                            onChanged: (value) {
+                                              setState(() {
+                                                incognitoComment = value;
+                                              });
+                                            }
+                                          ),
+                                          const Spacer(),
+                                          ElevatedButton(
+                                            onPressed: (){
+                                              setState(() {
+                                                if(_formKeyComment.currentState!.validate()) {
+                                                  sendCommentDetail(snapshot.data!.id, _contentComment.text, incognitoComment);
+                                                  Fluttertoast.showToast(msg: "Your comment has been posted.");
+                                                  refreshPage(snapshot.data!.id);
+                                                }
+                                              });
+                                            }, 
+                                            child: const SizedBox(
+                                              width: 100,
+                                              height: 30,
+                                              child: Center(
+                                                child: Text("Comment"),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               // Commented List
@@ -364,7 +388,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                                 ListTile(
                                                   leading: const CircleAvatar(
                                                     radius: 20,
-                                                    backgroundImage: AssetImage("assets/images/yukinon.jpeg"),
+                                                    backgroundImage: AssetImage("assets/images/User_icon.jpg"),
                                                   ),
                                                   title: Row(
                                                     children: [
@@ -469,57 +493,71 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                           // Reply TextField
                                           Visibility(
                                             visible: _isReply[index],
-                                            child: Column(
-                                              // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    const CircleAvatar(
-                                                      radius: 20,
-                                                      backgroundImage: AssetImage("assets/images/tomoe.jpg"),
-                                                    ),
-                                                    const SizedBox(width: 20),
-                                                    Expanded(
-                                                      child: TextFormField(
-                                                        minLines: 1,
-                                                        maxLines: 2,
-                                                        controller: _contentReplies[index],
-                                                        keyboardType: TextInputType.multiline,
-                                                        decoration: const InputDecoration(
-                                                          hintText: "Type your reply...",
-                                                          border: InputBorder.none,
-                                                          isDense: true, // important line
-                                                          contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 15), // adjust form size
+                                            child: Form(
+                                              key: _formKeyReplies[index],
+                                              child: Column(
+                                                // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const CircleAvatar(
+                                                        radius: 20,
+                                                        backgroundImage: AssetImage("assets/images/User_icon.jpg"),
+                                                      ),
+                                                      const SizedBox(width: 20),
+                                                      Expanded(
+                                                        child: TextFormField(
+                                                          minLines: 1,
+                                                          maxLines: 2,
+                                                          controller: _contentReplies[index],
+                                                          keyboardType: TextInputType.multiline,
+                                                          decoration: const InputDecoration(
+                                                            hintText: "Type your reply...",
+                                                            border: InputBorder.none,
+                                                            isDense: true, // important line
+                                                            contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 15), // adjust form size
+                                                          ),
+                                                          validator: (value) {
+                                                            if (value == null || value.isEmpty) {
+                                                              return "Please enter reply";
+                                                            }
+                                                            else {
+                                                              return null;
+                                                            }
+                                                          },
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    const Text("Incognito : "),
-                                                    Switch(
-                                                      value: incognitoReplies[index], 
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          incognitoReplies[index] = value;
-                                                        });
-                                                      }
-                                                    ),
-                                                    const Spacer(),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          sendReplyDetail(snapshot.data!.id, snapshot.data!.comments[index].id, _contentReplies[index].text, incognitoReplies[index]);
-                                                          refreshPage(snapshot.data!.id);
-                                                        });
-                                                      }, 
-                                                      icon: const Icon(Icons.reply),
-                                                      iconSize: 25,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ]
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      const Text("Incognito : "),
+                                                      Switch(
+                                                        value: incognitoReplies[index], 
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            incognitoReplies[index] = value;
+                                                          });
+                                                        }
+                                                      ),
+                                                      const Spacer(),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            if(_formKeyReplies[index].currentState!.validate()) {
+                                                              sendReplyDetail(snapshot.data!.id, snapshot.data!.comments[index].id, _contentReplies[index].text, incognitoReplies[index]);
+                                                              Fluttertoast.showToast(msg: "Your reply has been posted.");
+                                                              refreshPage(snapshot.data!.id);
+                                                            }
+                                                          });
+                                                        }, 
+                                                        icon: const Icon(Icons.reply),
+                                                        iconSize: 25,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ]
+                                              ),
                                             ),
                                           ),
                                           // Reply List
@@ -543,7 +581,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                                         ListTile(
                                                           leading: const CircleAvatar(
                                                             radius: 20,
-                                                            backgroundImage: AssetImage("assets/images/Rengoku.jpg"),
+                                                            backgroundImage: AssetImage("assets/images/User_icon.jpg"),
                                                           ),
                                                           title: Row(
                                                             children: [
@@ -671,7 +709,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                                   ),
                                                   image: DecorationImage(
                                                     fit: BoxFit.fill,
-                                                    image: AssetImage("assets/images/tomoe.jpg") // Forum Image
+                                                    image: AssetImage("assets/images/User_icon.jpg") // Forum Image
                                                   ),
                                                 ),
                                               )
@@ -836,6 +874,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     else {
       throw Exception(response.statusCode);
     }
+    
   }
 
   replyFavorited(forumID, commentID, replyID) async {
@@ -863,6 +902,4 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
       throw Exception(response.statusCode);
     }
   }
-
-
 }

@@ -24,19 +24,7 @@ class MyApp extends StatelessWidget {
         fontFamily: "Poppins",
       ),
       home: const ForumPage(),
-      /*
-      initialRoute: 'navbar', // Set first page
-      routes: {
-        //'navbar': (context) => const NavBar(),
-        'homePage': (context) => const ForumPage(),
-        // 'forumAllPage': (context) => const ForumAllPage(),
-        // 'forumDetailPage': (context) => const ForumDetailPage(),
-        // 'newForumPage': (context) => const NewForumPage(),
-        // 'editForumPage': (context) => const EditForumPage(), 
-        // 'editCommentPage': (context) => const EditCommentPage(),
-        // 'editReplyPage': (context) => const EditReplyPage(), // Change page by using only page's name
-      },
-      */
+
     );
   }
 }

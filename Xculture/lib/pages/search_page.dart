@@ -39,15 +39,11 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Forum",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Search",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: showAllForum(),
       floatingActionButton: FloatingActionButton(
@@ -172,7 +168,7 @@ class _SearchPageState extends State<SearchPage> {
                                             ),
                                             Wrap(
                                               crossAxisAlignment: WrapCrossAlignment.start,
-                                              children: snapshot.data![index].tags.map((tag) => Padding(
+                                              children: snapshot.data![index].tags.take(2).map((tag) => Padding(
                                                 padding: const EdgeInsets.only(right: 10),
                                                 child: Chip(
                                                   visualDensity: const VisualDensity(horizontal: -4, vertical: -4), // Chip size -4 -> 4
@@ -181,7 +177,7 @@ class _SearchPageState extends State<SearchPage> {
                                               )).toList(),
                                             ),
                                           ],
-                                        )
+                                        ),
                                       ),
                                       const SizedBox(height: 5),
                                       Column(
@@ -252,12 +248,12 @@ class _SearchPageState extends State<SearchPage> {
   bool isContain(Forum data, String search) {
     var isContain = false;
 
-    if (data.title.toLowerCase().contains(search)) {
+    if (data.title.toLowerCase().contains(search.toLowerCase())) {
       isContain = true;
     }
     else if (data.tags.isNotEmpty) {
       for (var tag in data.tags) {
-        if(tag.name.toLowerCase().contains(search)) {
+        if(tag.name.toLowerCase().contains(search.toLowerCase())) {
           isContain = true;
         }
       }

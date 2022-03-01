@@ -34,15 +34,11 @@ class _ForumAllPageState extends State<ForumAllPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Forum",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 25),
-          ),
-        ),
+        centerTitle: true,
+        title: const Text(
+          "Forum",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 25),
+        )
       ),
       body: showAllForum(forumList),
       // bottomNavigationBar: BottomNavigationBar(const NavBar()),
@@ -70,6 +66,44 @@ class _ForumAllPageState extends State<ForumAllPage> {
           padding: const EdgeInsets.only(left: 20),
           child: const Text("Trending Forum", style: TextStyle(fontSize: 20)),
         ),
+        /*
+        const SizedBox(height: 20),
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  onChanged: (value) {
+                      setState((){
+                        searchString = value; 
+                      });
+                  },
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    hintText: "Search Here...",
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Colors.redAccent,
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Colors.redAccent,
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                      
+                    ),
+                    prefixIcon: const Icon(Icons.search, color: Colors.red),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        */
         Container(
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -140,11 +174,12 @@ class _ForumAllPageState extends State<ForumAllPage> {
                   itemBuilder: (context, index) {
                     var dt = DateTime.parse(snapshot.data![index].updateDate).toLocal();
                     String formattedDate = DateFormat('dd/MM/yyyy – HH:mm a').format(dt);
-                    return snapshot.data![index].title.toLowerCase().contains(searchString) ? InkWell(
+                    var contained = isContain(snapshot.data![index], searchString);
+                    return contained ? InkWell(
                       // padding: const EdgeInsets.all(20.0),
                       child: 
                         Container(
-                          margin: const EdgeInsets.all(20.0),
+                          margin: const EdgeInsets.all(10),
                           height: 100,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +226,7 @@ class _ForumAllPageState extends State<ForumAllPage> {
                                           ),
                                           Wrap(
                                             crossAxisAlignment: WrapCrossAlignment.start,
-                                            children: snapshot.data![index].tags.map((tag) => Padding(
+                                            children: snapshot.data![index].tags.take(2).map((tag) => Padding(
                                               padding: const EdgeInsets.only(right: 10),
                                               child: Chip(
                                                 visualDensity: const VisualDensity(horizontal: -4, vertical: -4), // Chip size -4 -> 4
@@ -250,5 +285,22 @@ class _ForumAllPageState extends State<ForumAllPage> {
         )      
       ],
     );
+  }
+
+  bool isContain(Forum data, String search) {
+    var isContain = false;
+
+    if (data.title.toLowerCase().contains(search.toLowerCase())) {
+      isContain = true;
+    }
+    else if (data.tags.isNotEmpty) {
+      for (var tag in data.tags) {
+        if(tag.name.toLowerCase().contains(search.toLowerCase())) {
+          isContain = true;
+        }
+      }
+    }
+
+    return isContain;
   }
 }
